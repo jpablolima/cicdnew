@@ -1,4 +1,5 @@
 FROM python:python:alpine3.20
 
+COPY main.py /
 
-CMD [ "python", "-c", "print(Hello, world!)" ]
+CMD [ "pytho", "main.py" ]
