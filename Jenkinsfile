@@ -5,7 +5,7 @@ pipeline {
     stages {
         stage("build") {
             steps {
-                sh """"
+                sh """
                     docker build -t hello_world .
                 """
             }

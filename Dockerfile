@@ -1,6 +1,7 @@
 FROM python:python:alpine3.20
 
 RUN pip install requests
-COPY main.py /
+
+COPY . /
 
 CMD [ "python", "main.py" ]
