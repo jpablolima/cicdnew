@@ -4,18 +4,15 @@ pipeline {
     }
    
     stages {
-        stage("build") {
+        stage("Checkout") {
             steps {
-                sh """
-                    docker build -t hello_world .
-                """
+                git "https://github.com/jpablolima/cicdnew.git"
+               
             }
         }
-        stage("run") {
+        stage("Build") {
             steps {
-                sh """
-                    docker run --rm hello_world
-                """
+               echo "Concluido"
 
             }
         }
