@@ -13,6 +13,8 @@ pipeline {
         stage("Uploud para Apache") {
             steps {
                sh "ls -la"
+               sh "cp index.html /var/www/html"
+               sh "sudo systemctl restart apache2"
 
             }
         }
