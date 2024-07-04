@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage("Checkout") {
             steps {
-                git "https://github.com/jpablolima/cicdnew.git"
+                git branch: 'main', credentialsId: 'docker', url: 'https://github.com/jpablolima/cicdnew.git'
                
             }
         }
