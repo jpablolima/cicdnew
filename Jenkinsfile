@@ -10,9 +10,9 @@ pipeline {
                
             }
         }
-        stage("Build") {
+        stage("Uploud para Apache") {
             steps {
-               echo "Concluido"
+               sh "ls -la"
 
             }
         }
