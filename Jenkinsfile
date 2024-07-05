@@ -24,7 +24,7 @@ pipeline {
         stage("Deploy to Apache") {
             steps {
                sh "ls -la"
-               sh "cp index.html ${env.GIT_PATH}/index.html"
+               sh "cp index.html ${env.APACHE_PATH}/index.html"
                sh "sudo systemctl restart apache2"
 
             }
