@@ -1,11 +1,12 @@
 pipeline {
     agent {
         label "linux-agent"
-        environment {
+        
+    }
+    environment {
             GIT_REPO = "https://github.com/jpablolima/cicdnew.git"
             APACHE_PATH =  "/var/www/html"
         }
-    }
 
    
     stages {
@@ -15,6 +16,7 @@ pipeline {
            
             }
         }
+        
         stage("Deploy to Apache") {
             steps {
                sh "ls -la"
