@@ -35,9 +35,12 @@ pipeline {
         
         stage("Deploy to Apache") {
             steps {
-               sh "ls -l /var/www/htm"
-               sh "cp . ${env.APACHE_PATH}/index.html"
-               sh " systemctl restart apache2"
+                script {
+                        sh "ls -l /var/www/htm"
+                        sh "cp index.html  ${env.APACHE_PATH}/index.html"
+                        sh " systemctl restart apache2"
+
+                }
 
             }
         }
