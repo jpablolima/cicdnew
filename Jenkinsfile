@@ -20,12 +20,24 @@ pipeline {
            
             }
         }
+        stage {
+            script {
+                sh '''
+                    # Verificar se o diretório /var/www/html existe
+                        if [ ! -d /var/www/html ]; then
+                            echo "O diretório /var/www/html não existe. Criando o diretório."
+                            sudo mkdir -p /var/www/html
+                        fi
+t
+                '''
+            }
+        }
         
         stage("Deploy to Apache") {
             steps {
-               sh "ls -la"
-               sh "cp index.html ${env.APACHE_PATH}/index.html"
-               sh "sudo systemctl restart apache2"
+               sh "ls -l /var/www/htm"
+               sh "cp . ${env.APACHE_PATH}/index.html"
+               sh " systemctl restart apache2"
 
             }
         }
