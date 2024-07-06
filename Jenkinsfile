@@ -21,9 +21,10 @@ pipeline {
             }
         }
         stage ("Apache Directory"){
-            script {
-                sh '''
-                    # Verificar se o diretório /var/www/html existe
+            steps {
+                script {
+                     sh '''
+                        # Verificar se o diretório /var/www/html existe
                         if [ ! -d /var/www/html ]; then
                             echo "O diretório /var/www/html não existe. Criando o diretório."
                             mkdir -p /var/www/html
@@ -32,6 +33,8 @@ pipeline {
                 '''
             }
         }
+
+    }
         
         stage("Deploy to Apache") {
             steps {
