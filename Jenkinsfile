@@ -20,15 +20,15 @@ pipeline {
            
             }
         }
-        stage {
+        stage ("Apache Directory"){
             script {
                 sh '''
                     # Verificar se o diretório /var/www/html existe
                         if [ ! -d /var/www/html ]; then
                             echo "O diretório /var/www/html não existe. Criando o diretório."
-                            sudo mkdir -p /var/www/html
+                            mkdir -p /var/www/html
                         fi
-t
+
                 '''
             }
         }
