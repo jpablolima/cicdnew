@@ -1,11 +1,12 @@
 pipeline {
     agent {
-        label "linux-agent"
+        label "jenkins_wsl"
         
     }
     environment {
             GIT_REPO = "https://github.com/jpablolima/cicdnew.git"
             APACHE_PATH =  "/var/www/html"
+            DOCKER_IMAGE = "webapp/httpd:latest"
         }
 
    
@@ -15,37 +16,38 @@ pipeline {
                 script {
                     
                     git branch: 'main', credentialsId: 'docker', url: "${GIT_REPO}"
-
                 }
-           
             }
         }
-        stage ("Apache Directory"){
+
+
+        stage ("Check Docker Installation"){
             steps {
                 script {
-                     sh '''
-                        # Verificar se o diretório /var/www/html existe
-                        if [ ! -d /var/www/html ]; then
-                            echo "O diretório /var/www/html não existe. Criando o diretório."
-                            mkdir -p /var/www/html
-                        fi
-
-                '''
+                    try {
+                        sh "docker --version"
+                        echo " Docker is installed"
+                    } catch (Exception e ) {
+                        error "Docker is nor installed"
+                    }
+                     
             }
         }
 
     }
-        
-        stage("Deploy to Apache") {
+        stage("Build Docker Image") {
             steps {
                 script {
-                        sh "ls -l /var/www/html"
-                        sh "cp index.html  ${env.APACHE_PATH}/index.html"
-                        sh "/usr/sbin/apachectl graceful"
-
+                        sh """
+                            docker build -t $DOCKER_IMAGE .
+                        """
                 }
-
             }
+        }
+    }
+    post {
+        always {
+            cleanWs()
         }
     }
 }

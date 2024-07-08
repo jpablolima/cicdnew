@@ -1,7 +1,7 @@
-FROM python:alpine3.20
+FROM httpd:2.4
 
-RUN pip install requests
+COPY . /usr/local/apache2/htdocs 
 
-COPY . /
 
-CMD [ "python", "main.py" ]
+
+EXPOSE 80
