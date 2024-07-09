@@ -8,8 +8,6 @@ pipeline {
             APACHE_PATH =  "/var/www/html"
             DOCKER_IMAGE = "webapp/httpd:latest"
         }
-
-   
     stages {
         stage("Checkout") {
             steps {
@@ -19,8 +17,6 @@ pipeline {
                 }
             }
         }
-
-
         stage ("Check Docker Installation"){
             steps {
                 script {
@@ -47,7 +43,7 @@ pipeline {
         stage("Run Container") {
             steps {
                 script {
-                    sh "docker run -p 80:80 $DOCKER_IMAGE"
+                    sh "docker run -d -p 80:80 $DOCKER_IMAGE"
                 }
             }
         }
