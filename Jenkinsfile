@@ -44,6 +44,13 @@ pipeline {
                 }
             }
         }
+        stage("Run Container") {
+            steps {
+                script {
+                    sh "docker run -p 80:80 $DOCKER_IMAGE"
+                }
+            }
+        }
     }
     post {
         always {
