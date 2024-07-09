@@ -7,6 +7,7 @@ pipeline {
             GIT_REPO = "https://github.com/jpablolima/cicdnew.git"
             APACHE_PATH =  "/var/www/html"
             DOCKER_IMAGE = "webapp/httpd:latest"
+            DOCKER_CONTAINER_NAME="webapp"
         }
     stages {
         stage("Checkout") {
@@ -43,7 +44,7 @@ pipeline {
         stage("Run Container") {
             steps {
                 script {
-                    sh "docker run -d -p 80:80 $DOCKER_IMAGE"
+                    sh "docker run -d --name $DOCKER_CONTAINER_NAME -p 80:80 $DOCKER_IMAGE"
                 }
             }
         }
