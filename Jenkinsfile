@@ -10,14 +10,6 @@ pipeline {
             DOCKER_CONTAINER_NAME="webapp"
         }
     stages {
-        stage("Checkout") {
-            steps {
-                script {
-                    
-                    git branch: 'main', credentialsId: 'docker', url: "${GIT_REPO}"
-                }
-            }
-        }
         stage ("Check Docker Installation"){
             steps {
                 script {
@@ -30,14 +22,32 @@ pipeline {
                      
             }
         }
-
     }
+        stage("Checkout") {
+            steps {
+                script {
+                    git branch: 'main', credentialsId: 'docker', url: "${GIT_REPO}"
+                }
+            }
+        }
         stage("Build Docker Image") {
             steps {
                 script {
                         sh """
                             docker build -t $DOCKER_IMAGE .
                         """
+                }
+            }
+        }
+        stage("Stop and Removbe Existing Contaioner"){
+            steps {
+                script {
+                    """
+                    if [ \$(docker ps -aq -f name={$DOCKER_CONTAINER_NAME})]; then
+                        docker stop ${$DOCKER_CONTAINER_NAME} ||  true
+                        docker rm ${DOCKER_CONTAINER_NAME} || true
+                    fi
+                    """
                 }
             }
         }
@@ -48,8 +58,20 @@ pipeline {
                 }
             }
         }
+        stage("Remove Docker Image")
+            steps{
+                script {
+                    sh "docker rmi  ${DOCKER_IMAGE} || true"
+                }
+            }
     }
     post {
+        success {
+            echo "Pipeline executed successfully!"
+        }
+        failure {
+            echo "Pipelinne failed!"
+        }
         always {
             cleanWs()
         }
