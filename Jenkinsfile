@@ -58,7 +58,7 @@ pipeline {
                 }
             }
         }
-        stage("Remove Docker Image")
+        stage("Remove Docker Image"){
             steps{
                 script {
                     sh "docker rmi  ${DOCKER_IMAGE} || true"
