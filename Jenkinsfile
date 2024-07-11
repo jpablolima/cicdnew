@@ -26,6 +26,21 @@ pipeline {
                 git branch: 'main', credentialsId: 'docker', url: "${GIT_REPO}"
             }
         }
+        stage("Linting") {
+            steps {
+                script {
+                    sh "npm -v"
+                    sh "npm install  -g htmlhint"
+                }
+            }
+        }
+        stage("Lint HTML"){
+            steps{
+                script {
+                    sh 'htmlhint "**/*.html" '
+                }
+            }
+        }
         stage("Build Docker Image") {
             steps {
                 script {
