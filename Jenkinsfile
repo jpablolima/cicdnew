@@ -26,11 +26,17 @@ pipeline {
                 git branch: 'main', credentialsId: 'docker', url: "${GIT_REPO}"
             }
         }
-        stage("Linting") {
+        stage("Linting Setup") {
             steps {
                 script {
                     sh "npm -v"
-                    sh "npm install  -g htmlhint"
+                    def htmlhintInstalled = sh(script: 'which htmlhint', returnStatus: true) == 0
+                    if (!htmlhintInstalled) {
+                        sh "npm install -g htmlhint"
+                        echo "HTMLHint installed"
+                    } else {
+                        echo "HTMLHint is already installed"
+                    }
                 }
             }
         }
