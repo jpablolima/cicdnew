@@ -37,7 +37,12 @@ pipeline {
         stage("Lint HTML"){
             steps{
                 script {
-                    sh 'htmlhint "**/*.html" '
+                    def htmlhintInstalled =  sh('script:which htmlhint', returnStatus: true ) == 0
+                    if (htmlhintInstalled) {
+                        sh 'htmlhint "**/*.html" '
+                    } else {
+                        echo 'HTMLHint não está instalado. Pule esta etapa.'
+                    }
                 }
             }
         }
