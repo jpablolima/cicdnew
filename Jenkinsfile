@@ -43,7 +43,7 @@ pipeline {
         stage("Lint HTML"){
             steps{
                 script {
-                    def htmlhintInstalled =  sh('script:which htmlhint', returnStatus: true ) == 0
+                    def htmlhintInstalled =  sh(script:'which htmlhint', returnStatus: true ) == 0
                     if (htmlhintInstalled) {
                         sh 'htmlhint "**/*.html" '
                     } else {
