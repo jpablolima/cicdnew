@@ -1,100 +1,42 @@
 pipeline {
     agent {
-        label "jenkins_wsl"
+         label "jenkins_wsl"
     }
-    environment {
-        GIT_REPO = "https://github.com/jpablolima/cicdnew.git"
-        APACHE_PATH = "/var/www/html"
-        DOCKER_IMAGE = "webapp/httpd:latest"
-        DOCKER_CONTAINER_NAME = "webapp"
-    }
+
     stages {
-        stage("Check Docker Installation") {
+        stage ("Check Docker") {
             steps {
                 script {
+                    // Verificando a instalação do Docker
                     try {
                         sh "docker --version"
-                        echo "Docker is installed"
                     } catch (Exception e) {
-                        error "Docker is not installed"
+                        error "Docker não está instalado no Servidor"
+                    }
+                    try {
+                        sh "docker info"
+                    } catch(Exception e) {
+                        error "O daemor Docker não está em execução no servidor"
+                    }
+                }   
+            }
+        }
+        stage('Deploy') {
+            steps {
+                script {
+                    dir("/mnt/f/devops/cicd") {
+                        sh 'docker-compose down'
+                        sh 'docker-compose up -d'
                     }
                 }
             }
         }
-        stage("Checkout") {
-            steps {
-                git branch: 'main', credentialsId: 'docker', url: "${GIT_REPO}"
-            }
-        }
-        stage("Linting Setup") {
+        stage("Verify Deployment") {
             steps {
                 script {
-                    sh "npm -v"
-                    def htmlhintInstalled = sh(script: 'which htmlhint', returnStatus: true) == 0
-                    if (!htmlhintInstalled) {
-                        sh "npm install -g htmlhint"
-                        echo "HTMLHint installed"
-                    } else {
-                        echo "HTMLHint is already installed"
-                    }
+                    sh 'docker ps'
                 }
             }
-        }
-        stage("Lint HTML"){
-            steps{
-                script {
-                    def htmlhintInstalled =  sh(script:'which htmlhint', returnStatus: true ) == 0
-                    if (htmlhintInstalled) {
-                        sh 'htmlhint "**/*.html" '
-                    } else {
-                        echo 'HTMLHint não está instalado. Pule esta etapa.'
-                    }
-                }
-            }
-        }
-        stage("Build Docker Image") {
-            steps {
-                script {
-                    sh "docker build -t ${DOCKER_IMAGE} ."
-                }
-            }
-        }
-        stage("Stop and Remove Existing Container") {
-            steps {
-                script {
-                    sh """
-                        if [ \$(docker ps -aq -f name=${DOCKER_CONTAINER_NAME}) ]; then
-                            docker stop ${DOCKER_CONTAINER_NAME} || true
-                            docker rm ${DOCKER_CONTAINER_NAME} || true
-                        fi
-                    """
-                }
-            }
-        }
-        stage("Run Container") {
-            steps {
-                script {
-                    sh "docker run -d --name ${DOCKER_CONTAINER_NAME} -p 80:80 ${DOCKER_IMAGE}"
-                }
-            }
-        }
-        stage("Remove Docker Image") {
-            steps {
-                script {
-                    sh "docker rmi ${DOCKER_IMAGE} || true"
-                }
-            }
-        }
-    }
-    post {
-        success {
-            echo "Pipeline executed successfully!"
-        }
-        failure {
-            echo "Pipeline failed!"
-        }
-        always {
-            cleanWs()
         }
     }
 }
