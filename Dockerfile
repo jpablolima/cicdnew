@@ -1,9 +1,9 @@
-FROM httpd:2.4
+FROM python:3.9
 
-RUN echo "ServerName localhost" >> /usr/local/apache2/conf/httpd.conf
+RUN pip install prometheus_client
 
-COPY . /usr/local/apache2/htdocs 
+COPY monitor_file.py  /app/monitor_file.py
 
+WORKDIR /app
 
-
-EXPOSE 80
+CMD [ "python", "monitor_file.py" ]
