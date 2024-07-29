@@ -8,7 +8,8 @@ scrape_configs:
       - targets: 
           - 'localhost:9090'
 
-  - job_name: 'frontend'
+  
+  - job_name: 'monitor_file_container'
     static_configs:
-      - targets: 
-          - 'localhost:8000'
+      - targets:
+          - 'monitor_file_container:8001'

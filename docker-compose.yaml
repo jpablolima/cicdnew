@@ -1,6 +1,22 @@
 version: '3.9'
 
 services:
+  apache:
+    image: httpd:latest
+    container_name: apache
+    volumes:
+      - .:/usr/local/apache2/htdocs/
+    ports:
+      - 8080:80
+
+  monitor:
+      build: .
+      container_name: monitor_file_container
+      volumes:
+        - .:/usr/local/apache2/htdocs/
+      ports:
+        - "8001:8000" 
+
   prometheus:
     image: prom/prometheus
     container_name: prometheus

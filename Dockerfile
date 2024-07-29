@@ -1,9 +1,9 @@
-FROM python:3.9
+FROM httpd:2.4
 
-RUN pip install prometheus_client
+COPY index.html /usr/local/apache2/htdocs
 
-COPY monitor_file.py  /app/monitor_file.py
+# Adicionar configuração do Apache
+COPY httpd-status.conf /usr/local/apache2/conf/extra/httpd-status.conf
 
-WORKDIR /app
-
-CMD [ "python", "monitor_file.py" ]
+# Incluir a configuração no httpd.conf
+RUN echo 'Include /usr/local/apache2/conf/extra/httpd-status.conf' >> /usr/local/apache2/conf/httpd.conf
